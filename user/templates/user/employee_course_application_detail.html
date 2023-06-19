@@ -1,0 +1,79 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+    <h2>Application Details</h2>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Employee Name</th>
+                <td>{{ application.employee_name }}</td>
+            </tr>
+            <tr>
+                <th>Programme Name</th>
+                <td>{{ application.programme_name }}</td>
+            </tr>
+            <tr>
+                <th>Training Provider</th>
+                <td>{{ application.training_provider }}</td>
+            </tr>
+            <tr>
+                <th>Employee Position</th>
+                <td>{{ application.employee_position }}</td>
+            </tr>
+            <!-- Add more fields as needed -->
+            <tr>
+                <th>Application Status</th>
+                <td>
+                    {% if application.application_status == 'approved' %}
+                        <span class="badge badge-success">Approved</span>
+                    {% elif application.application_status == 'denied' %}
+                        <span class="badge badge-danger">Denied</span>
+                    {% else %}
+                        <span class="badge badge-primary">Pending Approval</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Provide options for admin approval/denial -->
+    {% if request.user.is_staff %}
+        <form method="post" action="{% url 'user:approve_application' application.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary m-1">Approve</button>
+        </form>
+        <form id="denyForm{{ application.id }}" method="post" action="{% url 'user:deny_application' application.id %}">
+            {% csrf_token %}
+            <button type="button" class="btn btn-danger m-1" onclick="openModal('denyModal{{ application.id }}')">Deny</button>
+        </form>
+    {% endif %}
+    <a href="{% url 'user:employee_course_application_list' %}" class="btn btn-secondary m-1">Return to List</a>
+
+    <!-- Deny Application Modal -->
+    <div class="modal fade" id="denyModal{{ application.id }}" tabindex="-1" role="dialog" aria-labelledby="denyModal{{ application.id }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Deny Application</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="denyForm" method="post" action="{% url 'user:deny_application' application.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="reason">Reason:</label>
+                            <textarea class="form-control" id="reason" name="reason" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger">Deny</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            $("#" + modalId).modal('show');
+        }
+    </script>
+{% endblock %}

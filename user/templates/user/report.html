@@ -1,0 +1,67 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+<style>
+    /* Add custom styling as needed */
+    .container {
+      margin-top: 50px;
+      margin-left: 30px;
+    }
+    .print-button {
+      margin-bottom: 20px;
+    }
+</style>
+<div class="container">
+    <h1>Employee Cost Report</h1>
+    <hr>
+    <h2>Employee ID: {{ employee_id }}</h2>
+    
+    <h3>Total Cost for Training Courses: €{{ total_cost }}</h3>
+    <h3>Total Duration for Training Courses: {{ total_duration }} hours</h3>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Training Name</th>
+                <th>Training Provider</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>No. of Days</th>
+                <th>Training Hours</th>
+                <!-- Add other table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for training in training_data %}
+            <tr>
+                <td>{{ training.training_name }}</td>
+                <td>{{ training.training_provider }}</td>
+                <td>{{ training.start_date }}</td>
+                <td>{{ training.end_date }}</td>
+                <td>{{ training.no_of_days }}</td>
+                <td>{{ training.training_hours }}</td>
+                <!-- Add other table cells as needed -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+    <a>
+        <button class="mr-3 button is-small is-link" onclick="window.print()">
+            Print
+        </button>
+    </a>
+    <a href="{% url 'user:download_csv' employee_id %}">
+        <button class="mr-3 button is-small is-link">
+            Download as CSV
+        </button>
+    </a>
+    <a href="{% url 'user:user_list' %}">
+        <button class="mr-3 button is-small is-link">
+            Go back
+        </button>
+    </a>
+</div>
+
+{% endblock %}

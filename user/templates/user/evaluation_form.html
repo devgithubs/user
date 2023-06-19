@@ -1,0 +1,11 @@
+{% extends 'user/base.html' %}
+{% block content %}
+    <h2>Course Evaluation Form</h2>
+    <p>Please complete the evaluation form for the course:</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit Evaluation</button>
+    </form>
+{% endblock %}

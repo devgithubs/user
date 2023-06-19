@@ -1,0 +1,13 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+    <h2>Edit Application <a href="{% url 'user:course_application_list' %}" class="btn btn-secondary mt-3">Return to Applications</a></h2>
+    
+    <!-- Add your form fields and update the application data -->
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+    
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+    <section class="hero is-primary">
+        <!-- Hero content -->
+    </section>
+
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <form method="get" action="{% url 'user:search_employee' %}">
+                    <input type="text" name="search_query" placeholder="Search for employee">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+
+        {% if search_query %}
+            {% if employees %}
+                <h2>Search Results:</h2>
+                <ul>
+                    {% for employee in employees %}
+                        <li>{{ employee }}</li>
+                        <li>{{ employee.role_name }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No results found.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}

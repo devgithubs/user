@@ -1,0 +1,48 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+    <h2>Application Details</h2>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Employee Name</th>
+                <td>{{ application.employee_name }}</td>
+            </tr>
+            <tr>
+                <th>Programme Name</th>
+                <td>{{ application.programme_name }}</td>
+            </tr>
+            <tr>
+                <th>Training Provider</th>
+                <td>{{ application.training_provider }}</td>
+            </tr>
+            <tr>
+                <th>Employee Position</th>
+                <td>{{ application.employee_position }}</td>
+            </tr>
+            <!-- Add more fields as needed -->
+            <tr>
+                <th>Application Status</th>
+                <td>
+                    {% if application.application_status == 'approved' %}
+                        <span class="badge badge-success">Approved</span>
+                    {% elif application.application_status == 'denied' %}
+                        <span class="badge badge-danger">Denied</span>
+                    {% else %}
+                        <span class="badge badge-primary">Pending Approval</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% if application.application_status == 'denied' %}
+                <tr>
+                    <th>Denial Reason</th>
+                    <td>
+                        {{ application.reason_for_denial }}
+                    </td>
+                </tr>
+            {% endif %}
+
+        </tbody>
+    </table>
+    <a href="{% url 'user:course_application_list' %}" class="btn btn-secondary">Return to List</a>
+{% endblock %}

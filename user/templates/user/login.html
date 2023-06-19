@@ -1,0 +1,32 @@
+{% extends 'user/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="hero is-primary">
+  <div class="hero-body">
+    <p class="title">
+      Login below
+    </p>
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="Username" required><br>
+      <input type="password" name="password" placeholder="Password" required><br>
+      <button class="mr-3 button is-small is-link" type="submit">Login</button>
+    </form>
+    <p class="subtitle">
+      forgot password?
+    </p>
+    <a href="{% url 'user:password_reset' %}">
+        <button class="mr-3 button is-small is-link">
+            Reset password
+        </button>
+    </a>
+    <a href="{% url 'user:index' %}">
+      <button class="mr-3 button is-small is-link">
+          Home
+      </button>
+    </a>
+  </div>
+</section>
+  
+{% endblock %}

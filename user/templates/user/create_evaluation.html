@@ -1,0 +1,114 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-lg-6">
+      <form method="post" class="evaluation-form mt-3">
+        {% csrf_token %}
+        <div class="card rounded px-3 mb-5">
+          <div class="card-body">
+            <h5 class="card-title">Evaluation Form</h5>
+            <div class="form-group">
+              <label for="{{ form.employee.id_for_label }}">Employee</label>
+              {{ form.employee }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.employee_name.id_for_label }}">Employee Name</label>
+              {{ form.employee_name }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.job_title.id_for_label }}">Job Title</label>
+              {{ form.job_title }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.training_course.id_for_label }}">Training Course</label>
+              {{ form.training_course }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.training_provider.id_for_label }}">Training Provider</label>
+              {{ form.training_provider }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.start_date.id_for_label }}">Start Date</label>
+              {{ form.start_date }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.end_date.id_for_label }}">End Date</label>
+              {{ form.end_date }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.no_of_days.id_for_label }}">Number of Days</label>
+              {{ form.no_of_days }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.certification.id_for_label }}">Certification</label>
+              {{ form.certification }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.certification_reason.id_for_label }}">Certification Reason</label>
+              {{ form.certification_reason }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.objective.id_for_label }}">Objective</label>
+              {{ form.objective }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.topics.id_for_label }}">Topics</label>
+              {{ form.topics }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.usefulness.id_for_label }}">Usefulness</label>
+              {{ form.usefulness }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.three_important_points.id_for_label }}">Three Important Points</label>
+              {{ form.three_important_points }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.topic_relevant.id_for_label }}">Topic Relevance</label>
+              {{ form.topic_relevant }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.encouragement.id_for_label }}">Encouragement</label>
+              {{ form.encouragement }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.material_helpfulness.id_for_label }}">Material Helpfulness</label>
+              {{ form.material_helpfulness }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.objective_met.id_for_label }}">Objective Met</label>
+              {{ form.objective_met }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.time_sufficient.id_for_label }}">Time Sufficiency</label>
+              {{ form.time_sufficient }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.expectation_met.id_for_label }}">Expectation Met</label>
+              {{ form.expectation_met }}
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="submit" class="btn btn-primary float-right">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <a href="{% url 'user:evaluation_list' %}" class="btn btn-link mr-3">
+        View Evaluation List
+    </a>
+    {% if evaluations %}
+    <div class="alert alert-success" role="alert">
+        There are pending evaluations.
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

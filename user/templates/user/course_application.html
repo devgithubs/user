@@ -1,0 +1,18 @@
+<!-- submit_application.html -->
+{% extends 'user/base.html' %}
+
+{% block content %}
+<a href="{{ request.META.HTTP_REFERER }}" class="btn btn-primary">
+    Back
+</a>
+    <div class="container">
+        <h2>Submit Course Application</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}
+
+

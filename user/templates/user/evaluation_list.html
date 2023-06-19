@@ -1,0 +1,24 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Evaluation Forms</h2>
+        <p>Please complete the evaluation form for the following courses:</p>
+            {% for course in courses %}
+                <div class="card mb-4">
+                  {{evaluation_notification_count}}
+                    <div class="card-body">
+                        <h4 class="card-title">{{ course.programme_name }}</h4>
+                        <p class="card-text">Please complete the evaluation form for this course.</p>
+                        <a href="{% url 'user:evaluation_form' course.id %}" class="btn btn-info">Complete Evaluation</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No evaluation forms available.</p>
+            {% endfor %}
+        </div>
+        <a href="{% url 'user:index' %}" class="btn btn-primary">
+          Home
+      </a>
+    </div>
+{% endblock %}

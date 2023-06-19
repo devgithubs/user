@@ -1,0 +1,60 @@
+<!-- dwitter/templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Add these links to the head section -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/js/bootstrap.min.js"></script>
+
+    <title>User</title>
+</head>
+<body>
+    <section class="hero bg-success text-white mb-4">
+        <div class="hero-body">
+            <h1 class="display-4">BJC HR PROJECT</h1>
+            <p class="lead">
+                Hello, {{ user.username|title|default:'Guest' }}!
+                {% if user.is_staff %}
+                    <button class="btn btn-primary rounded-pill" disabled>Admin</button>
+                {% elif user.is_authenticated %}
+                    <button class="btn btn-primary rounded-pill" disabled>Employee</button>
+                {% else %}
+                    <button class="btn btn-primary rounded-pill" disabled>Guest</button>
+                {% endif %}
+            </p>
+            <a href="{% url 'user:logout' %}">
+                <button class="mr-3 btn btn-link rounded-pill">
+                    Logout
+                </button>
+            </a>
+        </div>
+    </section>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>           
+        {% endfor %}
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+5+qP4Av/8i5S7hvvxKG02Lws7nFqnBqu3pdbmOvjBz/6W+" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

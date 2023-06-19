@@ -1,0 +1,37 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+
+<div class="column">
+
+    <div class="block">
+    <h1 class="title is-1">
+        Evaluation Detail
+    </h1>
+    Name: {{ evaluation }}
+    <br>
+    ID: {{ evaluation.id }}
+    <br>
+    Topics: {{ evaluation.topics }}
+    <br>
+    No. Days: {{ evaluation.no_of_days }}
+    
+    <a href={% url "user:evaluation_list" %}>
+        <button class="button is-dark is-outlined is-fullwidth">
+            All Evaluations
+        </button>
+    </a>
+    
+</div>
+
+
+<div class="column is-one-third">
+
+    <div class="block">
+        
+    </div>
+
+    
+</div>
+
+{% endblock content %}
