@@ -16,9 +16,19 @@ from django.utils import timezone
 
 def index(request):
     user = request.user
+    user_applications = UserTraining.objects.filter(user=request.user).select_related('training').count()
+    employee_applications = TrainingApplications.objects.all().count()
     courses = TrainingApplications.objects.filter(end_date__lte=date.today(), employee_name=user).count()
+    evaluations = Evaluation.objects.all().count()
 
-    return render(request, "user/index.html", {'courses':courses})
+    context = {
+        'employee_applications':employee_applications,
+        'user_applications':user_applications,
+        'courses':courses,
+        'evaluations':evaluations,
+    }
+
+    return render(request, "user/index.html", context)
 
 @login_required
 @user_passes_test(lambda user: user.is_staff)
@@ -149,10 +159,38 @@ def search_employee(request):
 #     return render(request, 'user/evaluation_list.html', {"evaluations":evaluations, "eval_total":eval_total})
 
 
-# def evaluation_detail(request, id):
-#     evaluation = get_object_or_404(Evaluation, id=id)
-#     # Other logic
-#     return render(request, 'user/evaluation_detail.html', {"evaluation":evaluation})
+def evaluation_detail(request, pk):
+    evaluation = get_object_or_404(Evaluation, pk=pk)
+
+    # Calculate the mean score for each field
+    mean_topic_relevant = Evaluation.objects.filter(training_application=evaluation.training_application).aggregate(
+        mean_topic_relevant=Avg('topic_relevant')
+    )['mean_topic_relevant']
+    mean_encouragement = Evaluation.objects.filter(training_application=evaluation.training_application).aggregate(
+        mean_encouragement=Avg('encouragement')
+    )['mean_encouragement']
+    mean_material_helpfulness = Evaluation.objects.filter(training_application=evaluation.training_application).aggregate(
+        mean_material_helpfulness=Avg('material_helpfulness')
+    )['mean_material_helpfulness']
+    mean_objective_met = Evaluation.objects.filter(training_application=evaluation.training_application).aggregate(
+        mean_objective_met=Avg('objective_met')
+    )['mean_objective_met']
+    mean_time_sufficient = Evaluation.objects.filter(training_application=evaluation.training_application).aggregate(
+        mean_time_sufficient=Avg('time_sufficient')
+    )['mean_time_sufficient']
+    mean_expectation_met = Evaluation.objects.filter(training_application=evaluation.training_application).aggregate(
+        mean_expectation_met=Avg('expectation_met')
+    )['mean_expectation_met']
+
+    return render(request, 'user/evaluation_detail.html', {
+        'evaluation': evaluation,
+        'mean_topic_relevant': mean_topic_relevant,
+        'mean_encouragement': mean_encouragement,
+        'mean_material_helpfulness': mean_material_helpfulness,
+        'mean_objective_met': mean_objective_met,
+        'mean_time_sufficient': mean_time_sufficient,
+        'mean_expectation_met': mean_expectation_met,
+    })
 
 
 def generate_report(request, employee_id):
@@ -345,22 +383,50 @@ def evaluation_list(request):
     # Retrieve evaluations for the logged-in user
     user = request.user
     courses = TrainingApplications.objects.filter(end_date__lte=date.today(), employee_name=user)
+    for course in courses:
+        print(course.id, course.programme_name, course.evaluation.completed)
     return render(request, 'user/evaluation_list.html', {'courses': courses})
 
 def evaluation_form(request, pk):
     course = get_object_or_404(TrainingApplications, pk=pk)
-
-    # Check if the user has permission to access the evaluation form
-    if not request.user.is_superuser and not course.usertraining_set.filter(user=request.user).exists():
-        return HttpResponseForbidden("You do not have permission to access this evaluation form.")
+    training_application_instance = TrainingApplications.objects.get(pk=pk)
 
     if request.method == 'POST':
         form = EvaluationForm(request.POST)
         if form.is_valid():
             evaluation = form.save(commit=False)
-            evaluation.training_course = course
+            evaluation.employee_id = request.user.id
+            evaluation.training_application = course
+            evaluation.completed = True
             evaluation.save()
+
+            # Update the evaluation field in the TrainingApplications instance
+            course.evaluation = evaluation
+            course.save()
+
+            # Debug prints
+            print(f"Course ID: {course.id}")
+            print(f"Evaluation ID: {evaluation.id}")
+            print(f"Evaluation Completed: {evaluation.completed}")
+
             return redirect('user:evaluation_list')
     else:
-        form = EvaluationForm()
-    return render(request, 'user/evaluation_form.html', {'form': form, 'course': course})
+        form = EvaluationForm(initial={'employee_id': request.user.id})
+
+    return render(request, 'user/evaluation_form.html', {'form': form, 'course': course, 'training_application_instance': training_application_instance})
+
+
+
+
+
+def employee_course_evaluation_list(request):
+    evaluations = Evaluation.objects.all()
+    return render(request, 'user/employee_course_evaluation_list.html', {'evaluations':evaluations})
+
+
+def custom_func(request):
+    amt = request.GET.get('amt')
+    multiplier = 10
+    # amt + multiplier
+    res = multiplier * int(amt)
+    return HttpResponse(f"Total with 10% {res}")

@@ -28,7 +28,7 @@ class CustomUser(AbstractUser):
 
 class Evaluation(models.Model):
     employee = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    training_application = models.ForeignKey('TrainingApplications', on_delete=models.CASCADE)
+    training_application = models.ForeignKey('TrainingApplications', on_delete=models.CASCADE, related_name='evaluation_record')
     employee_name = models.CharField(max_length=45)
     job_title = models.CharField(max_length=45)
     training_course = models.TextField()
@@ -48,7 +48,7 @@ class Evaluation(models.Model):
     objective_met = models.IntegerField()
     time_sufficient = models.IntegerField()
     expectation_met = models.IntegerField()
-    requires_attention = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
 
 
     class Meta:
@@ -90,6 +90,8 @@ class TrainingApplications(models.Model):
     employee_qualification = models.TextField()
     employee_signed = models.TextField()
     administrator_signed = models.TextField()
+    evaluation = models.OneToOneField(Evaluation, null=True, blank=True, on_delete=models.CASCADE, related_name='training_application_record')
+
     class Meta:
         db_table = 'training_table'
     def __str__(self):

@@ -13,61 +13,133 @@
     border-radius: 5px;
     background-color: #f2f2f2;
     text-align: center;
-  }
+    cursor: pointer;
 
-  .custom-button {
-    margin-top: 20px;
-    font-weight: bold;
   }
-
-  .custom-button:hover {
+  
+  .custom-tile:hover {
     background-color: #007bff;
     color: #fff;
+
   }
+
+  .custom-tile:hover .badge {
+    background-color: #fff;
+    color: #007bff;
+  }
+  
+  .tile-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .tile-text {
+    text-align: center;
+    margin-bottom: 10px;
+
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    top: 0;
+    right: 0;
+  }
+
+  
 </style>
 
 <section class="hero is-primary">
   <div class="hero-body">
     {% comment %} Admin specific urls {% endcomment %}
     {% if user.is_staff %}
-        <div class="custom-tile">
-            <a href="{% url 'user:register' %}" class="button is-link custom-button">
-                Register user
-            </a>
+        <div class="custom-tile" onclick="window.location='{% url 'user:register' %}'">
+            <div class="tile-content">
+                <span class="tile-text">Register user</span>
+            </div>
         </div>
-        <div class="custom-tile">
-            <a href="{% url 'user:employee_list' %}" class="button is-link custom-button">
-                View Employees
-            </a>
+        <div class="custom-tile" onclick="window.location='{% url 'user:employee_list' %}'">
+            <div class="tile-content">
+                <span class="tile-text">View Employees</span>
+            </div>
         </div>
-        <div class="custom-tile">
-            <a href="{% url 'user:employee_course_application_list' %}" class="button is-link custom-button">
-                View employee course applications
-            </a>
+        <div class="custom-tile" onclick="window.location=''">
+          <div class="tile-content">
+              <span class="tile-text">Reports</span>
+          </div>
+      </div>
+        <div class="custom-tile" onclick="window.location='{% url 'user:employee_course_application_list' %}'">
+            <div class="tile-content">
+                <span class="tile-text">View employee course applications</span>
+                {% if employee_applications > 0 %}
+                  <span class="badge">{{ employee_applications }}</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="custom-tile" onclick="window.location='{% url 'user:employee_course_evaluation_list' %}'">
+          <div class="tile-content">
+              <span class="tile-text">View all Employee course evaluations</span>
+              {% if evaluations > 0 %}
+                  <span class="badge">{{ evaluations }}</span>
+              {% endif %}
+          </div>
         </div>
     {% endif %}
 
-    <div class="custom-tile">
-        <a href="{% url 'user:course_application' %}" class="button is-link custom-button">
-            Apply for a course
-        </a>
+    <div class="custom-tile" onclick="window.location='{% url 'user:course_application' %}'">
+        <div class="tile-content">
+            <span class="tile-text">Apply for a course</span>
+        </div>
     </div>
-    <div class="custom-tile">
-        <a href="{% url 'user:course_application_list' %}" class="button is-link custom-button" style="width: 6rem;">
-            View your course applications
-        </a>
+    <div class="custom-tile" onclick="window.location='{% url 'user:course_application_list' %}'">
+        <div class="tile-content">
+            <span class="tile-text">View your course applications</span>
+              {% if user_applications > 0 %}
+                <span class="badge">{{ user_applications }}</span>
+              {% endif %}
+        </div>
     </div>
+    <div class="custom-tile" onclick="window.location='{% url 'user:evaluation_list' %}'">
+        <div class="tile-content">
+            <span class="tile-text">View your course evaluations</span>
+            {% if courses > 0 %}
+                <span class="badge">{{ courses }}</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% comment %} <div class="custom-tile">
+      <form method="get" action="{% url 'user:custom_func' %}">
+        <div class="form-group">
+          <label for="amt">Amount:</label>
+          <input type="number" id="amt" name="amt" placeholder="Enter amount" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+    
     <div class="custom-tile">
-      <a href="{% url 'user:evaluation_list' %}" class="button is-link custom-button" style="width: 6rem;">
-          View your course evaluations
-          {% if courses > 0 %} <!-- Check if there are evaluations requiring attention -->
-            <button type="button" class="btn btn-primary">
-              <span class="badge badge-light">{{ courses }}</span>
-            </button> <!-- Display the notification badge -->
-          {% endif %}
-      </a>
-  </div>
-  </div>
-
+      <form method="get" action="{% url 'user:custom_func' %}">
+        <div class="form-group">
+          <label for="amt">Amount:</label>
+          <input type="number" id="amt" name="amt" placeholder="Enter amount" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div> {% endcomment %}
 </section>
+
+
 {% endblock %}

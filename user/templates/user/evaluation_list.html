@@ -4,21 +4,25 @@
     <div class="container">
         <h2>Evaluation Forms</h2>
         <p>Please complete the evaluation form for the following courses:</p>
-            {% for course in courses %}
-                <div class="card mb-4">
-                  {{evaluation_notification_count}}
-                    <div class="card-body">
-                        <h4 class="card-title">{{ course.programme_name }}</h4>
+        {% for course in courses %}
+            <div class="card mb-4">
+                {{ evaluation_notification_count }}
+                <div class="card-body">
+                    <h4 class="card-title">{{ course.programme_name }}</h4>
+                    {% if course.evaluation.completed %}
+                        <p class="card-text">Evaluation already completed.</p>
+                        <a href="{% url 'user:evaluation_detail' course.evaluation.id %}" class="btn btn-success">View Evaluation</a>
+                    {% else %}
                         <p class="card-text">Please complete the evaluation form for this course.</p>
                         <a href="{% url 'user:evaluation_form' course.id %}" class="btn btn-info">Complete Evaluation</a>
-                    </div>
+                    {% endif %}
                 </div>
-            {% empty %}
-                <p>No evaluation forms available.</p>
-            {% endfor %}
-        </div>
+            </div>
+        {% empty %}
+            <p>No evaluation forms available.</p>
+        {% endfor %}
         <a href="{% url 'user:index' %}" class="btn btn-primary">
-          Home
-      </a>
+            Home
+        </a>
     </div>
 {% endblock %}

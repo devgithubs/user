@@ -5,6 +5,8 @@ app_name = "user"
 
 urlpatterns = [
     path('', views.index, name='index'),
+    # test
+    path('custom_func/', views.custom_func, name='custom_func'),
     # Training Course Application urls
     path('course_application/', views.course_application, name='course_application'),
     path('course_application_list/', views.course_application_list, name='course_application_list'),
@@ -18,9 +20,10 @@ urlpatterns = [
     # Evaluation
     path('evaluation/list/', views.evaluation_list, name='evaluation_list'),
     path('evaluation/form/<int:pk>/', views.evaluation_form, name='evaluation_form'),
+    path('employee_course_evaluation_list/', views.employee_course_evaluation_list, name='employee_course_evaluation_list'),
+    path('evaluation_detail/<int:pk>/', views.evaluation_detail, name='evaluation_detail'),
     #
     #
-    # path('evaluation_detail/<int:id>/', views.evaluation_detail, name='evaluation_detail'),
     # path('evaluation_list/', views.evaluation_list, name='evaluation_list'),
     # path('create_evaluation/', views.create_evaluation, name='create_evaluation'),
     path('generate_report/<int:employee_id>/', views.generate_report, name='generate_report'),

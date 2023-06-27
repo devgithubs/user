@@ -5,6 +5,8 @@ from .models import CustomUser, Evaluation, TrainingApplications
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field
 
+from django.contrib.auth import get_user_model
+
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -52,57 +54,6 @@ class CustomUserForm(forms.ModelForm):
         )
 
 
-# class EvaluationForm(forms.ModelForm):
-#     CHOICES = [
-#         (1, 'Strongly Disagree'),
-#         (2, 'Disagree'),
-#         (3, 'Neutral'),
-#         (4, 'Agree'),
-#         (5, 'Strongly Agree'),
-#     ]
-#     start_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-#     end_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-#     topic_relevant = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-#     encouragement = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-#     material_helpfulness = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-#     objective_met = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-#     time_sufficient = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-#     expectation_met = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect)
-
-#     class Meta:
-#         model = Evaluation
-#         fields = '__all__'
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.helper = FormHelper()
-#         self.helper.layout = Layout(
-#             Div(
-#                 Field('employee'),
-#                 Field('employee_name'),
-#                 Field('job_title'),
-#                 Field('training_course'),
-#                 Field('training_provider'),
-#                 Field('start_date'),
-#                 Field('end_date'),
-#                 Field('no_of_days'),
-#                 Field('certification'),
-#                 Field('certification_reason'),
-#                 Field('objective'),
-#                 Field('topics'),
-#                 Field('usefulness'),
-#                 Field('three_important_points'),
-#                 Field('topic_relevant'),
-#                 Field('encouragement'),
-#                 Field('material_helpfulness'),
-#                 Field('objective_met'),
-#                 Field('time_sufficient'),
-#                 Field('expectation_met'),
-#                 css_class='form-check'
-#             ),
-#         )
-
-
 class EvaluationForm(forms.ModelForm):
     CHOICES = [
         (1, 'Strongly Disagree'),
@@ -120,7 +71,21 @@ class EvaluationForm(forms.ModelForm):
 
     class Meta:
         model = Evaluation
-        exclude = ('training_application', 'employee')
+        exclude = ('training_application', 'employee', 'completed')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['employee_id'] = forms.IntegerField(widget=forms.HiddenInput())
+
+    def save(self, commit=True):
+        evaluation = super().save(commit=False)
+        employee_id = self.cleaned_data.get('employee_id')
+        user_model = get_user_model()
+        employee = user_model.objects.get(id=employee_id)
+        evaluation.employee = employee
+        if commit:
+            evaluation.save()
+        return evaluation
 
 
 class TrainingApplicationForm(forms.ModelForm):

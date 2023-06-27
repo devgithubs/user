@@ -1,37 +1,200 @@
 {% extends 'user/base.html' %}
 
 {% block content %}
-
-<div class="column">
-
-    <div class="block">
-    <h1 class="title is-1">
-        Evaluation Detail
-    </h1>
-    Name: {{ evaluation }}
-    <br>
-    ID: {{ evaluation.id }}
-    <br>
-    Topics: {{ evaluation.topics }}
-    <br>
-    No. Days: {{ evaluation.no_of_days }}
-    
-    <a href={% url "user:evaluation_list" %}>
-        <button class="button is-dark is-outlined is-fullwidth">
-            All Evaluations
-        </button>
-    </a>
-    
-</div>
-
-
-<div class="column is-one-third">
-
-    <div class="block">
+<style>
+    .badge {
+        color: #fff;
+    }
+</style>
+    <div class="container">
+        <h2>Evaluation Details</h2>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Training Course</th>
+                    <td>{{ evaluation.training_course }}</td>
+                </tr>
+                <tr>
+                    <th>Employee Name</th>
+                    <td>{{ evaluation.employee_name }}</td>
+                </tr>
+                <tr>
+                    <th>Job Title</th>
+                    <td>{{ evaluation.job_title }}</td>
+                </tr>
+                <!-- Add more fields as needed -->
+            </tbody>
+        </table>
         
+        <!-- Display the completed evaluation fields as a table -->
+<h4>Completed Evaluation</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Criteria</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Topic Relevant</td>
+            <td{% if evaluation.topic_relevant >= 4 %} class="text-success"{% elif evaluation.topic_relevant <= 2 %} class="text-danger"{% endif %}>
+                {{ evaluation.topic_relevant }}
+                {% if evaluation.topic_relevant >= 4 %}
+                    <span class="badge bg-success">Good</span>
+                {% elif evaluation.topic_relevant <= 2 %}
+                    <span class="badge bg-danger">Poor</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Encouragement</td>
+            <td{% if evaluation.encouragement >= 4 %} class="text-success"{% elif evaluation.encouragement <= 2 %} class="text-danger"{% endif %}>
+                {{ evaluation.encouragement }}
+                {% if evaluation.encouragement >= 4 %}
+                    <span class="badge bg-success">Good</span>
+                {% elif evaluation.encouragement <= 2 %}
+                    <span class="badge bg-danger">Poor</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Material Helpfulness</td>
+            <td{% if evaluation.material_helpfulness >= 4 %} class="text-success"{% elif evaluation.material_helpfulness <= 2 %} class="text-danger"{% endif %}>
+                {{ evaluation.material_helpfulness }}
+                {% if evaluation.material_helpfulness >= 4 %}
+                    <span class="badge bg-success">Good</span>
+                {% elif evaluation.material_helpfulness <= 2 %}
+                    <span class="badge bg-danger">Poor</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Objective Met</td>
+            <td{% if evaluation.objective_met >= 4 %} class="text-success"{% elif evaluation.objective_met <= 2 %} class="text-danger"{% endif %}>
+                {{ evaluation.objective_met }}
+                {% if evaluation.objective_met >= 4 %}
+                    <span class="badge bg-success">Good</span>
+                {% elif evaluation.objective_met <= 2 %}
+                    <span class="badge bg-danger">Poor</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Time Sufficient</td>
+            <td{% if evaluation.time_sufficient >= 4 %} class="text-success"{% elif evaluation.time_sufficient <= 2 %} class="text-danger"{% endif %}>
+                {{ evaluation.time_sufficient }}
+                {% if evaluation.time_sufficient >= 4 %}
+                    <span class="badge bg-success">Good</span>
+                {% elif evaluation.time_sufficient <= 2 %}
+                    <span class="badge bg-danger">Poor</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>Expectation Met</td>
+            <td{% if evaluation.expectation_met >= 4 %} class="text-success"{% elif evaluation.expectation_met <= 2 %} class="text-danger"{% endif %}>
+                {{ evaluation.expectation_met }}
+                {% if evaluation.expectation_met >= 4 %}
+                    <span class="badge bg-success">Good</span>
+                {% elif evaluation.expectation_met <= 2 %}
+                    <span class="badge bg-danger">Poor</span>
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
+</table>
+        
+        <!-- Display the mean scores chart -->
+        <h4>Mean Scores</h4>
+        <canvas id="evaluationChart"></canvas>
+        
+        <!-- Display the completion values pie chart -->
+        <h4>Completion Values</h4>
+        <canvas id="completionChart"></canvas>
+        
+        <a href="{% url 'user:index' %}" class="btn btn-primary">Home</a>
     </div>
 
-    
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const evaluationChartCanvas = document.getElementById('evaluationChart');
+            const evaluationChartContext = evaluationChartCanvas.getContext('2d');
 
-{% endblock content %}
+            const chartData = {
+                labels: ['Topic Relevant', 'Encouragement', 'Material Helpfulness', 'Objective Met', 'Time Sufficient', 'Expectation Met'],
+                datasets: [{
+                    label: 'Evaluation Results',
+                    data: [
+                        {{ mean_topic_relevant }},
+                        {{ mean_encouragement }},
+                        {{ mean_material_helpfulness }},
+                        {{ mean_objective_met }},
+                        {{ mean_time_sufficient }},
+                        {{ mean_expectation_met }}
+                    ],
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(evaluationChartContext, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+
+            const completionChartCanvas = document.getElementById('completionChart');
+            const completionChartContext = completionChartCanvas.getContext('2d');
+
+            const completionData = {
+                labels: ['Topic Relevant', 'Encouragement', 'Material Helpfulness', 'Objective Met', 'Time Sufficient', 'Expectation Met'],
+                datasets: [{
+                    label: 'Completion Values',
+                    data: [
+                        {{ evaluation.topic_relevant }},
+                        {{ evaluation.encouragement }},
+                        {{ evaluation.material_helpfulness }},
+                        {{ evaluation.objective_met }},
+                        {{ evaluation.time_sufficient }},
+                        {{ evaluation.expectation_met }}
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 159, 64, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(completionChartContext, {
+                type: 'pie',
+                data: completionData
+            });
+        });
+    </script>
+{% endblock %}

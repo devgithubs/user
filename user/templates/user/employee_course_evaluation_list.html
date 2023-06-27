@@ -3,28 +3,24 @@
 
 {% block content %}
     <div class="container">
-        <h2 class="mb-4">Employee Course Application List</h2>
-        {% for application in applications %}
+        <h2 class="mb-4">Employee course evaluation list</h2>
+        {% for evaluation in evaluations %}
             <div class="card mb-4">
                 <div class="card-body bg-light">
-                    <h4 class="card-title">Applicant Name: {{ application }}</h4>
-                    <h4>Course Name: {{application.programme_name}}</h4>
-                    {% if application.application_status == 'approved' %}
+                    <h4 class="card-title">Applicant Name: {{ evaluation }}</h4>
+                    {% comment %} {% if application.application_status == 'approved' %}
                         <h4>Status: <span class="badge badge-success">Approved</span><a href="{% url 'user:employee_application_detail' application.id %}" class="btn-sm btn-secondary m-1">View details</a></h4>
                     {% elif application.application_status == 'denied' %}
                         <h4>Status: <span class="badge badge-danger">Denied</span><a href="{% url 'user:employee_application_detail' application.id %}" class="btn-sm btn-secondary m-1">View details</a></h4>
                     {% else %}
                         <h4>Status: <span class="badge badge-primary">Pending Approval</span><a href="{% url 'user:employee_application_detail' application.id %}" class="btn-sm btn-secondary m-1">View details</a></h4>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
                 </div>
             </div>
         {% empty %}
-            <p>No applications found.</p>
+            <p>No evaluations found.</p>
         {% endfor %}
 
-        <a href="{% url 'user:course_application' %}" class="btn btn-primary">
-            Add another application
-        </a>
         <a href="{% url 'user:index' %}" class="btn btn-primary">
             Home
         </a>

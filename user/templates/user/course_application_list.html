@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container">
-        <h2 class="mb-4">Your Course Application List</h2>
+        <h2 class="mb-4">{{ user|title }}'s Course Application List</h2>
         {% for application in applications %}
             <div class="card mb-4">
                 <div class="card-body shadow-lg p-3 mb-2 bg-white rounded">
